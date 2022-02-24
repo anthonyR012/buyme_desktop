@@ -2,18 +2,37 @@ package graficaprofesional2;
 
 
 
+import java.awt.FlowLayout;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SpringLayout;
+import sun.misc.BASE64Encoder;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -30,7 +49,7 @@ public class Conexion extends javax.swing.JFrame {
     public static final String URL = "jdbc:mysql://localhost:3306/buyme" ;
   
     public static final String USERNAME = "rubioAdminStore";
-     
+     public static String IMAGEN = "";
     public static final String PASSWORD = "sI9Y5xTfSWm065WO";
     public static int ID;
     PreparedStatement ps;
@@ -86,11 +105,12 @@ public class Conexion extends javax.swing.JFrame {
         ExisProd = new javax.swing.JTextField();
         BUSCAR = new javax.swing.JButton();
         ACTUALIZAR = new javax.swing.JButton();
-        ELIMINAR = new javax.swing.JButton();
+        seleccionarProducto = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         computadores = new javax.swing.JRadioButton();
         tablets = new javax.swing.JRadioButton();
         celulares = new javax.swing.JRadioButton();
+        ELIMINAR1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 204, 255));
@@ -206,10 +226,15 @@ public class Conexion extends javax.swing.JFrame {
             }
         });
 
-        ELIMINAR.setText("ELIMINAR");
-        ELIMINAR.addActionListener(new java.awt.event.ActionListener() {
+        seleccionarProducto.setText("SELECCIONE IMAGEN");
+        seleccionarProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                seleccionarProductoMouseClicked(evt);
+            }
+        });
+        seleccionarProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ELIMINARActionPerformed(evt);
+                seleccionarProductoActionPerformed(evt);
             }
         });
 
@@ -226,6 +251,13 @@ public class Conexion extends javax.swing.JFrame {
         celulares.setBackground(new java.awt.Color(255, 122, 0));
         buttonGroup1.add(celulares);
         celulares.setText("Celulares");
+
+        ELIMINAR1.setText("ELIMINAR");
+        ELIMINAR1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ELIMINAR1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
         escritorio.setLayout(escritorioLayout);
@@ -277,22 +309,28 @@ public class Conexion extends javax.swing.JFrame {
                             .addGroup(escritorioLayout.createSequentialGroup()
                                 .addGap(59, 59, 59)
                                 .addComponent(ACTUALIZAR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(AGREGAR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ELIMINAR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(BUSCAR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(AGREGAR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BUSCAR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(41, 41, 41))))
             .addGroup(escritorioLayout.createSequentialGroup()
-                .addGap(158, 158, 158)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(escritorioLayout.createSequentialGroup()
+                        .addGap(158, 158, 158)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(escritorioLayout.createSequentialGroup()
+                        .addGap(304, 304, 304)
+                        .addComponent(seleccionarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
+                    .addContainerGap(606, Short.MAX_VALUE)
+                    .addComponent(ELIMINAR1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(31, 31, 31)))
         );
         escritorioLayout.setVerticalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(escritorioLayout.createSequentialGroup()
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
                 .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(escritorioLayout.createSequentialGroup()
                         .addGap(29, 29, 29)
@@ -346,21 +384,28 @@ public class Conexion extends javax.swing.JFrame {
                 .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ExisProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ExisProd, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(72, 72, 72)
+                .addGap(76, 76, 76)
                 .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(GaranProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ELIMINAR, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(66, 66, 66))
+                    .addComponent(GaranProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(seleccionarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
+            .addGroup(escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, escritorioLayout.createSequentialGroup()
+                    .addContainerGap(785, Short.MAX_VALUE)
+                    .addComponent(ELIMINAR1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(56, 56, 56)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(escritorio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -389,7 +434,7 @@ public class Conexion extends javax.swing.JFrame {
     private void AGREGARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AGREGARActionPerformed
       Connection con = null;
       
-      try{
+    /*  try{
           
        
           con =  getConection();
@@ -493,6 +538,94 @@ public class Conexion extends javax.swing.JFrame {
           }
           }*/
       
+    
+      if(!NombreProducto.getText().isEmpty() 
+                  && !MarcaProducto.getText().isEmpty() 
+                  && !RefProducto.getText().isEmpty()
+                  && !DesProducto.getText().isEmpty()
+                  && !PrecioProducto.getText().isEmpty()
+                  && !ExisProd.getText().isEmpty()
+                  && !GaranProducto.getText().isEmpty()){
+          
+           String response = "";
+    try {
+         String categoria;
+          
+          if(computadores.isSelected()){
+              categoria = "6";
+          }else if(celulares.isSelected()){
+               categoria = "8";
+          }else{
+               categoria = "7";
+          }
+        String nombre = NombreProducto.getText().toString();
+        
+                  String urlStr = "http://localhost/webService/insert.php?case=productos"                         
+                          + "&nombre="+NombreProducto.getText()
+                          +"&marca="+MarcaProducto.getText()
+                          +"&referencia="+RefProducto.getText()
+                          +"&descripcion="+DesProducto.getText()
+                          +"&precio="+PrecioProducto.getText()
+                          +"&existencia="+ExisProd.getText()
+                          +"&garantia="+GaranProducto.getText()
+                          +"&categoria="+categoria
+                          +"&id_proveedor="+this.ID;
+                  
+                  
+                   URL url = new URL(urlStr);
+             
+
+        Map<String, Object> params = new LinkedHashMap<>();
+ 
+        params.put("imagen", this.IMAGEN);
+ 
+        StringBuilder postData = new StringBuilder();
+        for (Map.Entry<String, Object> param : params.entrySet()) {
+            if (postData.length() != 0)
+                postData.append('&');
+            postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+            postData.append('=');
+            postData.append(URLEncoder.encode(String.valueOf(param.getValue()),
+                    "UTF-8"));
+        }
+        byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+ 
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded");
+        conn.setRequestProperty("Content-Length",
+                String.valueOf(postDataBytes.length));
+        conn.setDoOutput(true);
+        conn.getOutputStream().write(postDataBytes);
+ 
+        Reader in = new BufferedReader(new InputStreamReader(
+                conn.getInputStream(), "UTF-8"));
+        
+       
+        for (int c = in.read(); c != -1; c = in.read())
+            response += (char) c;
+        
+        
+        
+              } catch (MalformedURLException ex) {
+                  Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+              } catch (IOException ex) {
+                  Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+              }
+        limpiarCampos();
+        
+        
+        if(response.contains("insert complete")){
+               JOptionPane.showMessageDialog(null, "Se registro un nuevo producto");
+        }else{
+              JOptionPane.showMessageDialog(null, "Verifica tu conexion a internet");
+        }
+      }else{
+           JOptionPane.showMessageDialog(null, "Error , Complete todos los campos");
+      }
+          
+    
     }//GEN-LAST:event_AGREGARActionPerformed
 
     private void ACTUALIZARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ACTUALIZARActionPerformed
@@ -597,40 +730,72 @@ public class Conexion extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ExisProdActionPerformed
 
-    private void ELIMINARActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ELIMINARActionPerformed
-        Connection con = null;
+    private void seleccionarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seleccionarProductoActionPerformed
+     
+        
+        
+        JFileChooser fileChooser = new JFileChooser();
+      Panel pn = new Panel();
+        
+    int seleccion = fileChooser.showOpenDialog(pn);
+            System.out.println("seleccion "+seleccion);
+    if (seleccion == JFileChooser.APPROVE_OPTION)
+    {
+       File fichero = fileChooser.getSelectedFile();
 
-        try{
+          try {
+              BufferedImage bi = ImageIO.read(fichero);
+              
+              ImageIcon iconImage = new ImageIcon(bi);
+              
+              JFrame jf = new JFrame();
+              jf.setLayout(new FlowLayout());
+              
+              jf.setSize(500,500);
+              
+              JLabel jl = new JLabel();
+              jl.setIcon(iconImage);
+              
+              jf.add(jl);
+              jf.setVisible(true);
+              jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+              
+          } catch (IOException ex) {
+              Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+          }
+   
+    
+        try {
+             String encode = null; //
+        InputStream in = null;        // Leer la matriz de bytes de imagen
+            in = new FileInputStream(fichero);
+           byte[] data = new byte[in.available()];
+            in.read(data);
+            encode = Base64.getEncoder().encodeToString(data);
+            
+              this.IMAGEN = encode;
+          System.out.println("Data "+encode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+            
+      
+          
+        
+        
+    }
 
-            con =  getConection();
-            ps =con.prepareStatement("DELETE FROM productos  WHERE  id_Producto = ?");
+    }//GEN-LAST:event_seleccionarProductoActionPerformed
 
-            ps.setInt(1, Integer.parseInt(id.getText()));
+    private void ELIMINAR1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ELIMINAR1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ELIMINAR1ActionPerformed
 
-            int verificacion = ps.executeUpdate();
-
-            if (verificacion > 0){
-                JOptionPane.showMessageDialog(null, "Producto Eliminado");
-
-            }
-
-            else {
-
-                JOptionPane.showMessageDialog(null, "Error , Producto No Eliminado");
-
-            }
-
-            con.close();
-            limpiarCampos();
-
-        }
-
-        catch (Exception e){
-            System.out.println(e);
-
-        }
-
-    }//GEN-LAST:event_ELIMINARActionPerformed
+    private void seleccionarProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_seleccionarProductoMouseClicked
+        
+        
+        
+    }//GEN-LAST:event_seleccionarProductoMouseClicked
 
  public static Connection getConection(){
      
@@ -688,7 +853,7 @@ public class Conexion extends javax.swing.JFrame {
     private javax.swing.JButton AGREGAR;
     private javax.swing.JButton BUSCAR;
     private javax.swing.JTextField DesProducto;
-    private javax.swing.JButton ELIMINAR;
+    private javax.swing.JButton ELIMINAR1;
     private javax.swing.JTextField ExisProd;
     private javax.swing.JLabel ExisProducto;
     private javax.swing.JTextField GaranProducto;
@@ -709,6 +874,7 @@ public class Conexion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JButton seleccionarProducto;
     private javax.swing.JRadioButton tablets;
     // End of variables declaration//GEN-END:variables
 }

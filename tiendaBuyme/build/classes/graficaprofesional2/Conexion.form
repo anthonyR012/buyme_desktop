@@ -30,9 +30,10 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="escritorio" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -113,24 +114,38 @@
                                   <Component id="ACTUALIZAR" max="32767" attributes="0"/>
                               </Group>
                               <Component id="AGREGAR" alignment="1" min="-2" pref="95" max="-2" attributes="0"/>
-                              <Component id="ELIMINAR" alignment="1" min="-2" pref="95" max="-2" attributes="0"/>
                               <Component id="BUSCAR" alignment="1" min="-2" pref="95" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="158" max="-2" attributes="0"/>
-                  <Component id="jLabel8" min="-2" pref="390" max="-2" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="158" max="-2" attributes="0"/>
+                          <Component id="jLabel8" min="-2" pref="390" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="304" max="-2" attributes="0"/>
+                          <Component id="seleccionarProducto" min="-2" pref="166" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              </Group>
+              <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace pref="606" max="32767" attributes="0"/>
+                      <Component id="ELIMINAR1" min="-2" pref="95" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                  </Group>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="jLabel8" pref="142" max="32767" attributes="0"/>
+                  <Component id="jLabel8" pref="145" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
@@ -202,13 +217,21 @@
                       <Component id="ExisProducto" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
                       <Component id="ExisProd" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel9" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
                       <Component id="GaranProducto" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
-                      <Component id="ELIMINAR" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="seleccionarProducto" min="-2" pref="35" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+              </Group>
+              <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace pref="785" max="32767" attributes="0"/>
+                      <Component id="ELIMINAR1" min="-2" pref="35" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
+                  </Group>
               </Group>
           </Group>
         </DimensionLayout>
@@ -422,12 +445,13 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ACTUALIZARActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="ELIMINAR">
+        <Component class="javax.swing.JButton" name="seleccionarProducto">
           <Properties>
-            <Property name="text" type="java.lang.String" value="ELIMINAR"/>
+            <Property name="text" type="java.lang.String" value="SELECCIONE IMAGEN"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ELIMINARActionPerformed"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="seleccionarProductoMouseClicked"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="seleccionarProductoActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
@@ -469,6 +493,14 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Celulares"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="ELIMINAR1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="ELIMINAR"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ELIMINAR1ActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
